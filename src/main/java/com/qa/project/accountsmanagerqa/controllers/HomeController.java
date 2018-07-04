@@ -1,4 +1,4 @@
-package com.qa.project.accountsmanagerqa;
+package com.qa.project.accountsmanagerqa.controllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

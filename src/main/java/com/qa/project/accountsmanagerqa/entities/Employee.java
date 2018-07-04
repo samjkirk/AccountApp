@@ -1,4 +1,4 @@
-package com.qa.project.accountsmanagerqa;
+package com.qa.project.accountsmanagerqa.entities;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

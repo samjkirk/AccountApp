@@ -1,3 +1,158 @@
+const Modal = React.createClass({
+
+    getInitialState: function() {
+        return {
+            firstName: this.props.employee.firstName,
+            lastName: this.props.employee.lastName,
+            accountNumber: this.props.employee.accountNumber
+        }
+    },
+
+    renderOnClose: function(){
+        var self = this;
+        $.ajax ({
+            url: "http://localhost:8080/app/findall"
+        }).then (function(data) {
+            self.setState({employees: data});
+            ReactDOM.render(
+                <EmployeeTable employees={self.state.employees} />, document.getElementById('body')
+            );
+        });
+    },
+
+    componentWillMount: function(){
+        const id = "modal-" + this.props.employee.id;
+        this.setState({id: id, dataTarget : '#' + id});
+    },
+
+    render: function() {
+        return (
+            <div>
+                <button type="button" className="btn btn-primary" data-toggle="modal" data-target={this.state.dataTarget}>
+                    Edit
+                </button>
+                <div className="modal fade" id={this.state.id} tabIndex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div className="modal-dialog" role="document">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title" id="exampleModalLabel">Modal title</h5>
+                                <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div className="modal-body container">
+                                <Edit employee={this.props.employee} onClick={this.props.onClick} />
+                            </div>
+                            <div className="modal-footer">
+                                <button type="button" className="btn btn-secondary" data-dismiss="modal" onClick={this.renderOnClose}>Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+});
+
+const Edit = React.createClass({
+    getInitialState: function() {
+        return {
+            firstName: this.props.employee.firstName,
+            lastName: this.props.employee.lastName,
+            accountNumber: this.props.employee.accountNumber
+        }
+    },
+
+    update: function() {
+        this.state.firstName = this.props.state.firstName,
+        this.state.lastName = this.props.state.lastName,
+        this.state.accountNumber = this.props.state.accountNumber
+    },
+
+    reRender: function() {
+        if (typeof this.props.onClick === "function" ) {
+            this.props.onClick(this.props.employee.firstName, this.props.employee.lastName, this.props.employee.accountNumber);
+        }
+    },
+
+    nameChange: function(e) {
+        this.setState({
+            firstName: e.target.value
+        })
+    },
+    lastChange: function(e) {
+        this.setState({
+            lastName: e.target.value
+        })
+    },
+    accountNumberChange: function(e) {
+        this.setState({
+            accountNumber: parseInt(e.target.value)
+        })
+    },
+
+    submit: function (e){
+        e.preventDefault();
+
+        console.log(this.props.employee.id);
+        const data = {
+            "id": this.props.employee.id,
+            "firstName": this.state.firstName,
+            "lastName": this.state.lastName,
+            "accountNumber": this.state.accountNumber
+        };
+
+        const jsonData = JSON.stringify(data);
+
+        const settings = {
+            "async": true,
+            "crossDomain": true,
+            "url": "app/add",
+            "method": "POST",
+            "headers": {
+                "content-type": "application/json",
+                "cache-control": "no-cache",
+                "postman-token": "7583589c-5a8a-9fa1-a6c1-cce43c23293d"
+            },
+            "processData": false,
+            "data": jsonData
+        };
+
+        $.ajax(settings)
+            .done(function(data) {
+                console.log("Hello")
+            })
+            .fail(function(jqXhr) {
+                console.log("data : " + data );
+                console.log('failed to register');
+            });
+    },
+
+    render: function () {
+        return (
+            <div className="container">
+                <form onSubmit={this.submit.bind(this)}>
+                    <div className="form-group">
+                        <label htmlFor="inputFName">First Name</label>
+                        <input type="text" className="form-control" id="inputFName" placeholder="First name" onChange={this.nameChange} val={this.state.firstName} defaultValue={this.props.employee.firstName}/>
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="inputLName">Last Name</label>
+                        <input type="text" className="form-control" id="inputLName" placeholder="Last name" onChange={this.lastChange} val={this.state.lastName} defaultValue={this.props.employee.lastName}/>
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="inputAccountNum">Account Number</label>
+                        <input type="text" className="form-control" id="inputAccountNumber" placeholder="Account Number" onChange={this.accountNumberChange} val={this.state.accountNumber} defaultValue={this.props.employee.accountNumber}/>
+                    </div>
+                    <div className="form-group">
+                        <button type="submit" className="btn btn-primary" reRenderParent={this.props.onClick}>Edit</button>
+                    </div>
+                </form>
+            </div>
+        );
+    }
+});
+
 {/* Contains Navbar and all navigation functions */}
 const Navbar = React.createClass({
     AddAccounts() {
@@ -20,7 +175,7 @@ const Navbar = React.createClass({
 
     render: function(){
         return (
-            <nav className="navbar navbar-expand-lg navbar-light bg-light">
+            <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
                 <a className="navbar-brand" href="#" onClick={this.Dashboard}>AccountsApp</a>
                 <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
                     <span className="navbar-toggler-icon" />
@@ -98,7 +253,7 @@ const Add = React.createClass({
 
     render: function () {
         return (
-            <div className="container">
+            <div className="container bg-dark text-light">
                 <form onSubmit={this.submit.bind(this)}>
                     <div className="form-group">
                         <label htmlFor="inputFName">First Name</label>
@@ -114,7 +269,7 @@ const Add = React.createClass({
                     </div>
                     <div className="form-group">
                         <button type="submit" className="btn btn-primary">Submit</button>
-            </div>
+                    </div>
                 </form>
             </div>
         );
@@ -156,6 +311,12 @@ const Employee = React.createClass({
             }
         });
     },
+    reRender: function(firstName, lastName, accountNumber) {
+        this.props.employee.firstName = firstName;
+        this.props.employee.lastName = lastName;
+        this.props.employee.accountNumber = accountNumber;
+        this.forceUpdate();
+    },
     render: function() {
         if (!this.state.delete) {
             return (
@@ -164,7 +325,10 @@ const Employee = React.createClass({
                     <td>{this.props.employee.lastName}</td>
                     <td>{this.props.employee.accountNumber}</td>
                     <td>
-                        <button className="btn btn-info" onClick={this.handleDelete}>Delete</button>
+                        <button className="btn btn-warning" onClick={this.handleDelete}>Delete</button>
+                    </td>
+                    <td>
+                        <Modal employee={this.props.employee} onClick={this.reRender}/>
                     </td>
                 </tr>);
         } else {
@@ -202,6 +366,7 @@ const App = React.createClass({
     },
 
     render() {
+        // if (!this.props.employees
         console.log(this.state.employees);
         return ( <EmployeeTable employees={this.state.employees}/> );
     }
@@ -216,7 +381,7 @@ const EmployeeTable = React.createClass({
         });
         return (
             <div className="container">
-                <table className="table table-striped">
+                <table className="table table-dark">
                     <thead>
                     <tr>
                         <th>First Name</th>
