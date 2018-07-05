@@ -63,18 +63,6 @@ const Edit = React.createClass({
         }
     },
 
-    update: function() {
-        this.state.firstName = this.props.state.firstName,
-        this.state.lastName = this.props.state.lastName,
-        this.state.accountNumber = this.props.state.accountNumber
-    },
-
-    reRender: function() {
-        if (typeof this.props.onClick === "function" ) {
-            this.props.onClick(this.props.employee.firstName, this.props.employee.lastName, this.props.employee.accountNumber);
-        }
-    },
-
     nameChange: function(e) {
         this.setState({
             firstName: e.target.value
