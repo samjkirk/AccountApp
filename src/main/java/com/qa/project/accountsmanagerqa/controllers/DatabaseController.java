@@ -1,34 +1,33 @@
 package com.qa.project.accountsmanagerqa.controllers;
 
-import com.qa.project.accountsmanagerqa.Constants.Constants;
 import com.qa.project.accountsmanagerqa.entities.Employee;
 import com.qa.project.accountsmanagerqa.repositories.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import static com.qa.project.accountsmanagerqa.Constants.Constants.*;
 
 @Controller
-@RequestMapping(path= "/app")
+@RequestMapping(path= APP_PATH)
 public class DatabaseController {
-    Constants CONS = new Constants();
 
     @Autowired
     private EmployeeRepository employeeRepository;
 
-    @PostMapping(path = "/add")
+    @PostMapping(path = ADD_PATH)
     public @ResponseBody String addNewEmployee (@RequestBody Employee employee) {
         employeeRepository.save(employee);
-        return "Added new employee";
+        return ADD_MESSAGE;
     }
 
-    @GetMapping(path = "/findall")
+    @GetMapping(path = GET_PATH)
     public @ResponseBody Iterable<Employee> findAllEmployees() {
         return employeeRepository.findAll();
     }
 
-    @DeleteMapping(path = "/delete")
+    @DeleteMapping(path = DEL_PATH)
     public @ResponseBody String deleteEmployee (@RequestBody Employee employee) {
         employeeRepository.delete(employee);
-        return "Deleted employee";
+        return DEL_MESSAGE;
     }
 }

@@ -28,14 +28,14 @@ const Modal = React.createClass({
     render: function() {
         return (
             <div>
-                <button type="button" className="btn btn-primary" data-toggle="modal" data-target={this.state.dataTarget}>
+                <button type="button" className="btn btn-primary" data-toggle="modal" data-target={this.state.dataTarget }>
                     Edit
                 </button>
-                <div className="modal fade" id={this.state.id} tabIndex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div className="modal fade text-dark" data-backdrop="static" id={this.state.id} tabIndex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div className="modal-dialog" role="document">
                         <div className="modal-content">
                             <div className="modal-header">
-                                <h5 className="modal-title" id="exampleModalLabel">Modal title</h5>
+                                <h5 className="modal-title" id="exampleModalLabel">Edit</h5>
                                 <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -130,8 +130,8 @@ const Edit = React.createClass({
 
     render: function () {
         return (
-            <div className="container">
-                <form onSubmit={this.submit.bind(this)}>
+            <div className="container text-dark">
+                <form onSubmit={this.submit.bind(null,this)}>
                     <div className="form-group">
                         <label htmlFor="inputFName">First Name</label>
                         <input type="text" className="form-control" id="inputFName" placeholder="First name" onChange={this.nameChange} val={this.state.firstName} defaultValue={this.props.employee.firstName}/>
@@ -145,7 +145,7 @@ const Edit = React.createClass({
                         <input type="text" className="form-control" id="inputAccountNumber" placeholder="Account Number" onChange={this.accountNumberChange} val={this.state.accountNumber} defaultValue={this.props.employee.accountNumber}/>
                     </div>
                     <div className="form-group">
-                        <button type="submit" className="btn btn-primary" reRenderParent={this.props.onClick}>Edit</button>
+                        <button type="submit" className="btn btn-primary" reRenderParent={this.props.onClick}>Save</button>
                     </div>
                 </form>
             </div>
@@ -153,7 +153,6 @@ const Edit = React.createClass({
     }
 });
 
-{/* Contains Navbar and all navigation functions */}
 const Navbar = React.createClass({
     AddAccounts() {
         ReactDOM.render(
@@ -192,7 +191,6 @@ const Navbar = React.createClass({
     }
 });
 
-{/* Add new account */}
 const Add = React.createClass({
     getInitialState: function() {
         return {}
@@ -254,7 +252,7 @@ const Add = React.createClass({
     render: function () {
         return (
             <div className="container bg-dark text-light">
-                <form onSubmit={this.submit.bind(this)}>
+                <form onSubmit={this.submit.bind(null,this)}>
                     <div className="form-group">
                         <label htmlFor="inputFName">First Name</label>
                         <input type="text" className="form-control" id="inputFName" placeholder="First name" onChange={this.nameChange} val={this.state.firstName} />
@@ -276,16 +274,19 @@ const Add = React.createClass({
     }
 });
 
-{/* Dashboard tab content */}
 const Dash = React.createClass({
     render: function () {
         return (
-            <h1>Welcome to the Dashboard</h1>
+            <div className="container bg-dark text-light">
+                <div className="jumbotron bg-dark">
+                    <h1>Welcome</h1>
+                    <p>Use the tabs above to manage your accounts...</p>
+                </div>
+            </div>
         );
     }
 });
 
-{/* Accounts tab content */}
 const Employee = React.createClass({
     getInitialState: function() {
         return {display: true };
@@ -366,13 +367,11 @@ const App = React.createClass({
     },
 
     render() {
-        // if (!this.props.employees
         console.log(this.state.employees);
         return ( <EmployeeTable employees={this.state.employees}/> );
     }
 });
 
-{/* Accounts table */}
 const EmployeeTable = React.createClass({
     render: function() {
         const rows = [];
@@ -386,7 +385,9 @@ const EmployeeTable = React.createClass({
                     <tr>
                         <th>First Name</th>
                         <th>Last Name</th>
-                        <th>Acc Number</th>
+                        <th>Account Number</th>
+                        <th></th>
+                        <th></th>
                     </tr>
                     </thead>
                     <tbody>{rows}</tbody>
