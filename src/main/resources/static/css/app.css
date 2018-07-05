@@ -4,4 +4,6 @@
 .container .form-group button {
     margin-bottom: 15px;
 }
-
+.bootstrap-override div {
+    padding: 20px;
+}
